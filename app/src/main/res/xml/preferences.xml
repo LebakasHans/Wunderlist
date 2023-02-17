@@ -9,17 +9,18 @@
         app:preference_attachBrightnessSlideBar="true"
         app:preference_dialog_negative="Cancel"
         app:preference_dialog_positive="Confirm"
-        app:default_color="@color/green"/>
+        app:default_color="@color/green"
+        app:defaultValue="98FF98"/>
 
     <com.skydoves.colorpickerpreference.ColorPickerPreference
         android:key="overdueNoteBackground"
         android:title="Overdue Color"
         android:summary="Background color for overdue Notes"
         app:preference_attachBrightnessSlideBar="true"
-
         app:preference_dialog_negative="Cancel"
         app:preference_dialog_positive="Confirm"
-        app:default_color="@color/red"/>
+        app:default_color="@color/red"
+        app:defaultValue="FF6961"/>
 
     <CheckBoxPreference
         android:defaultValue="true"

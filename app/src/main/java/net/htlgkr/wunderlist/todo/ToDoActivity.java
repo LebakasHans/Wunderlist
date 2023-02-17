@@ -47,16 +47,20 @@ public class ToDoActivity extends AppCompatActivity {
         setUpDate();
         setUpFinishButton();
 
-        if (getIntent().hasExtra("inputToDo")){
-            ToDo inputToDo = (ToDo) getIntent().getSerializableExtra("inputToDo");
-
-            long date = ZonedDateTime.of(deadline, ZoneId.systemDefault()).toInstant().toEpochMilli();
-            deadlineCalendarView.setDate(date);
-            currentlyPickedDeadline.setText(DateTimeFormatter.ofPattern(ToDo.DATE_PATTERN).format(inputToDo.getDeadline()));
-            isCompleteCheckBox.setChecked(inputToDo.isCompleted());
-            title.setText(inputToDo.getTitle());
-            description.setText(inputToDo.getDescription());
+        if (getIntent().getSerializableExtra("inputToDo") != null){//TODO make edit contextmenu
+            setToDoActivityViews();
         }
+    }
+
+    private void setToDoActivityViews() {
+        ToDo inputToDo = (ToDo) getIntent().getSerializableExtra("inputToDo");
+
+        long date = ZonedDateTime.of(deadline, ZoneId.systemDefault()).toInstant().toEpochMilli();
+        deadlineCalendarView.setDate(date);
+        currentlyPickedDeadline.setText(DateTimeFormatter.ofPattern(ToDo.DATE_PATTERN).format(inputToDo.getDeadline()));
+        isCompleteCheckBox.setChecked(inputToDo.isCompleted());
+        title.setText(inputToDo.getTitle());
+        description.setText(inputToDo.getDescription());
     }
 
     @Override
@@ -98,7 +102,7 @@ public class ToDoActivity extends AppCompatActivity {
                 && !description.getText().toString().isEmpty()
                 && deadline != null){
                     if (deadline.isBefore(LocalDateTime.now())){
-                        Toast.makeText(ToDoActivity.this, "The deadline has to be after the current date!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ToDoActivity.this, "The deadline has to be after the current time!", Toast.LENGTH_SHORT).show();
                     }else{
                         Intent intent = new Intent();
                         intent.putExtra("outputToDo", new ToDo(
@@ -116,6 +120,5 @@ public class ToDoActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 }
