@@ -16,5 +16,13 @@ public class SettingsActivity extends AppCompatActivity {
                 .replace(android.R.id.content, new
                         MySettingsFragment())
                 .commit();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

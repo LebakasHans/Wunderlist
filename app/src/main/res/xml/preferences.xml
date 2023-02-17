@@ -16,6 +16,7 @@
         android:title="Overdue Color"
         android:summary="Background color for overdue Notes"
         app:preference_attachBrightnessSlideBar="true"
+
         app:preference_dialog_negative="Cancel"
         app:preference_dialog_positive="Confirm"
         app:default_color="@color/red"/>
