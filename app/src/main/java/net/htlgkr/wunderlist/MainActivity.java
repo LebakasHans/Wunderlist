@@ -29,8 +29,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     //TODO safe
     //TODO load
-    //TODO context menu
-    //TODO edit
+    //TODO fix margin
 
     private ActivityResultLauncher<ToDo> toDoLauncher;
     private ActivityResultLauncher<Intent> preferencesLauncher;
@@ -51,6 +50,15 @@ public class MainActivity extends AppCompatActivity {
         setUpSharedPreferences();
         setUpPreferencesLauncher();
         setUpListView();
+
+        for (int i = 0; i < 10; i++) {
+            addItem(new ToDo(
+                "Test" + i,
+                    "Description",
+                    false,
+                    LocalDateTime.now()
+            ));
+        }
     }
 
     private void setUpListView() {

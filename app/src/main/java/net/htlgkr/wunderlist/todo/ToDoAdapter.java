@@ -13,6 +13,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -81,7 +82,6 @@ public class ToDoAdapter extends BaseAdapter{
         ((CheckBox) listItem.findViewById(R.id.toDoLayoutIsCompleteCheckBox)).setChecked(givenToDo.isCompleted());
         ((TextView) listItem.findViewById(R.id.toDoLayoutDeadline)).setText(givenToDo.getDeadline().format(DateTimeFormatter.ofPattern(ToDo.DATE_PATTERN)));
         ((TextView) listItem.findViewById(R.id.toDoLayoutDescription)).setText(givenToDo.getDescription());
-
 
         if (givenToDo.isCompleted()) {
             setPreference("doneNoteBackground", R.color.green, listItem);
