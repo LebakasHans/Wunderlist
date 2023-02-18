@@ -75,6 +75,8 @@ public class ToDoAdapter extends BaseAdapter{
 
     @NonNull
     private View adaptView(View listItem, ToDo givenToDo) {
+        listItem.setLongClickable(true);
+
         ((TextView) listItem.findViewById(R.id.toDoLayoutTitle)).setText(givenToDo.getTitle());
         ((CheckBox) listItem.findViewById(R.id.toDoLayoutIsCompleteCheckBox)).setChecked(givenToDo.isCompleted());
         ((TextView) listItem.findViewById(R.id.toDoLayoutDeadline)).setText(givenToDo.getDeadline().format(DateTimeFormatter.ofPattern(ToDo.DATE_PATTERN)));
@@ -131,7 +133,6 @@ public class ToDoAdapter extends BaseAdapter{
     }
 
     private List<ToDo> filterToDoList(boolean showOverdueToDos){
-
         if (!showOverdueToDos) {
             List<ToDo> list = new ArrayList<>(originalToDoList);
             list = list.stream()

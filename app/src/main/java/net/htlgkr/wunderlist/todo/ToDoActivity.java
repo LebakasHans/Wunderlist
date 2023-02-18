@@ -34,6 +34,8 @@ public class ToDoActivity extends AppCompatActivity {
     private CheckBox isCompleteCheckBox;
     private LocalDateTime deadline;
     private TextView currentlyPickedDeadline;
+    private boolean hasInput;
+    private boolean positiveResult = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +48,8 @@ public class ToDoActivity extends AppCompatActivity {
         isCompleteCheckBox = findViewById(R.id.isCompleteCheckBox);
         setUpDate();
         setUpFinishButton();
-
-        if (getIntent().getSerializableExtra("inputToDo") != null){//TODO make edit contextmenu
+        hasInput = getIntent().getSerializableExtra("inputToDo") != null;
+        if (hasInput){
             setToDoActivityViews();
         }
     }
@@ -55,9 +57,10 @@ public class ToDoActivity extends AppCompatActivity {
     private void setToDoActivityViews() {
         ToDo inputToDo = (ToDo) getIntent().getSerializableExtra("inputToDo");
 
-        long date = ZonedDateTime.of(deadline, ZoneId.systemDefault()).toInstant().toEpochMilli();
+        long date = ZonedDateTime.of(inputToDo.getDeadline(), ZoneId.systemDefault()).toInstant().toEpochMilli();
         deadlineCalendarView.setDate(date);
         currentlyPickedDeadline.setText(DateTimeFormatter.ofPattern(ToDo.DATE_PATTERN).format(inputToDo.getDeadline()));
+        deadline = inputToDo.getDeadline();
         isCompleteCheckBox.setChecked(inputToDo.isCompleted());
         title.setText(inputToDo.getTitle());
         description.setText(inputToDo.getDescription());
@@ -66,7 +69,19 @@ public class ToDoActivity extends AppCompatActivity {
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
+        Intent intent = new Intent();
+        setResult(RESULT_CANCELED, intent);
         return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (!positiveResult){
+            Intent intent = new Intent();
+            setResult(RESULT_CANCELED, intent);
+        }
+
+        super.onDestroy();
     }
 
     private void setUpDate() {
@@ -106,13 +121,13 @@ public class ToDoActivity extends AppCompatActivity {
                     }else{
                         Intent intent = new Intent();
                         intent.putExtra("outputToDo", new ToDo(
-                                title.getText().toString()
-                                , description.getText().toString()
-                                , isCompleteCheckBox.isChecked()
-                                , deadline
+                                    title.getText().toString()
+                                    , description.getText().toString()
+                                    , isCompleteCheckBox.isChecked()
+                                    , deadline
                         ));
-
                         setResult(RESULT_OK, intent);
+                        positiveResult = true;
                         finish();
                     }
                 }else{
