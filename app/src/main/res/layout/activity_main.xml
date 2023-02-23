@@ -12,5 +12,7 @@
     <ListView
         android:id="@+id/toDoItemsLV"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:dividerHeight="10dp"
+        android:divider="@null"/>
 </LinearLayout>

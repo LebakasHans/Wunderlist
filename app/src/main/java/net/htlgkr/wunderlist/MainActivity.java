@@ -11,6 +11,7 @@ import androidx.preference.PreferenceManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,16 +22,19 @@ import android.widget.ListView;
 import net.htlgkr.wunderlist.todo.ToDo;
 import net.htlgkr.wunderlist.todo.ToDoAdapter;
 import net.htlgkr.wunderlist.todo.ToDoContract;
+import net.htlgkr.wunderlist.todo.ToDoReader;
+import net.htlgkr.wunderlist.todo.ToDoWriter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    //TODO safe
-    //TODO load
-    //TODO fix margin
-
+    private static final String saveFilename = "savedToDos";
     private ActivityResultLauncher<ToDo> toDoLauncher;
     private ActivityResultLauncher<Intent> preferencesLauncher;
     private List<ToDo> todoList;
@@ -38,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private ToDoAdapter mAdapter;
     private SharedPreferences prefs ;
     private SharedPreferences.OnSharedPreferenceChangeListener preferencesChangeListener;
+    private Comparator<ToDo> timeComparator;
     private boolean nextToDoIsEdited = false;
     private int posOfEditedToDo = -1;
 
@@ -46,18 +51,55 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        timeComparator = new Comparator<ToDo>() {
+            @Override
+            public int compare(ToDo o1, ToDo o2) {
+                if (o1.getDeadline().isAfter(o2.getDeadline())){
+                    return 1;
+                }else if (o1.getDeadline().isBefore(o2.getDeadline())){
+                    return -1;
+                }
+                return 0;
+            }
+        };
         setUpToDoLauncher();
         setUpSharedPreferences();
         setUpPreferencesLauncher();
         setUpListView();
+        loadToDos();
+    }
 
-        for (int i = 0; i < 10; i++) {
-            addItem(new ToDo(
-                "Test" + i,
-                    "Description",
-                    false,
-                    LocalDateTime.now()
-            ));
+    private void loadToDos() {
+        try {
+            ToDoReader toDoReader = new ToDoReader(
+                    openFileInput(saveFilename)
+            );
+            todoList.addAll(toDoReader.readToDoList());
+            mAdapter.notifyDataSetChanged();
+
+        } catch (FileNotFoundException e) {
+            Log.d("Load", "No ToDo save file found");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        saveToDos();
+        super.onDestroy();
+    }
+
+    private void saveToDos(){
+        try {
+            ToDoWriter toDoWriter = new ToDoWriter(
+                    openFileOutput(saveFilename, MODE_PRIVATE)
+            );
+            toDoWriter.writeToDoList(todoList);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            Log.d("save", "failed to save ToDos");
         }
     }
 
@@ -92,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
                 if (result != null) {
                     if (nextToDoIsEdited){
                         deleteItem(posOfEditedToDo);
+                        System.out.println("WTF");
                     }
                     addItem(result);
                 }
@@ -107,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void addItem(ToDo toDo) {
         todoList.add(toDo);
+        Collections.sort(todoList, timeComparator);
         mAdapter.notifyDataSetChanged();
     }
 
@@ -147,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
                 int pos = info.position;
                 nextToDoIsEdited = true;
                 posOfEditedToDo = pos;
-                toDoLauncher.launch(todoList.get(pos));
+                toDoLauncher.launch(mAdapter.getFilteredToDoList().get(pos));
             }
         }else if(item.getItemId() == R.id.context_delete){
             if ( info != null ) {
@@ -159,7 +203,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void deleteItem(int index) {
-        todoList.remove(index);
+        todoList.remove(mAdapter.getFilteredToDoList().get(index));
+        mAdapter.getFilteredToDoList().remove(index);
         mAdapter.notifyDataSetChanged();
     }
 }

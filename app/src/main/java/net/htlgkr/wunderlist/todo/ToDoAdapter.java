@@ -43,6 +43,10 @@ public class ToDoAdapter extends BaseAdapter{
         this.preferences = preferences;
     }
 
+    public List<ToDo> getFilteredToDoList() {
+        return filteredToDoList;
+    }
+
     @Override
     public int getCount() {
         boolean showOverdueNotes = preferences.getBoolean("showOverdueNotes", true);
