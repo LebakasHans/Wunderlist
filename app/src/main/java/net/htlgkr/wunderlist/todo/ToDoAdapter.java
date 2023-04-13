@@ -103,7 +103,7 @@ public class ToDoAdapter extends BaseAdapter{
                 } else if(givenToDo.getDeadline().isBefore(LocalDateTime.now())){
                     setPreference("overdueNoteBackground", R.color.red, listItem);
                 } else {
-                    setBackgroundColorOfNote(listItem, "#FFFFFF");
+                    setBackgroundColorOfNote(listItem, "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.md_theme_background)));
                 }
             }
         });
@@ -146,5 +146,11 @@ public class ToDoAdapter extends BaseAdapter{
         }else {
             return originalToDoList;
         }
+    }
+
+    public void setToDoList(List<ToDo> toDoList) {
+        this.originalToDoList = toDoList;
+        this.filteredToDoList = filterToDoList(preferences.getBoolean("showOverdueNotes", true));
+        notifyDataSetChanged();
     }
 }

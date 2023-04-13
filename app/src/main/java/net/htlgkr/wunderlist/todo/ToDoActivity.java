@@ -88,6 +88,7 @@ public class ToDoActivity extends AppCompatActivity {
         deadlineCalendarView = findViewById(R.id.deadlineCV);
         currentlyPickedDeadline = findViewById(R.id.currentlyPickedDeadline);
         deadlineCalendarView.setMinDate(Instant.now().toEpochMilli());
+        deadlineCalendarView.setDate(Long.MIN_VALUE);
 
         deadlineCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override

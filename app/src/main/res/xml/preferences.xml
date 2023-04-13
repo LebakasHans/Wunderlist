@@ -8,8 +8,7 @@
         android:summary="Background color for done Notes"
         app:preference_dialog_negative="Cancel"
         app:preference_dialog_positive="Confirm"
-        app:default_color="@color/green"
-        app:defaultValue="#98FF98"/>
+        app:default_color="@color/green" />
 
     <com.skydoves.colorpickerpreference.ColorPickerPreference
         android:key="overdueNoteBackground"
@@ -17,12 +16,16 @@
         android:summary="Background color for overdue Notes"
         app:preference_dialog_negative="Cancel"
         app:preference_dialog_positive="Confirm"
-        app:default_color="@color/red"
-        app:defaultValue="#FF6961"/>
+        app:default_color="@color/red" />
 
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="showOverdueNotes"
         android:title="Show Overdue Notes" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="writeToExternalStorage"
+        android:title="Write To SD-Card" />
 
 </PreferenceScreen>

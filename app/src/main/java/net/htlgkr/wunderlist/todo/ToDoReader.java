@@ -1,52 +1,42 @@
 package net.htlgkr.wunderlist.todo;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ToDoReader {
+    private static final Type type = new TypeToken<Map<String, List<ToDo>>>(){}.getType();
     private InputStream inputStream;
 
     public ToDoReader(InputStream inputStream) {
         this.inputStream = inputStream;
     }
 
-    public List<ToDo> readToDoList() throws IOException {
-        List<ToDo> todos = new ArrayList<>();
+    public Map<String, List<ToDo>> readToDos() throws IOException {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeDeserializer());
 
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
-            String line;
-            String title = null;
-            String description = null;
-            boolean completed = false;
-            LocalDateTime deadline = null;
-
-            while ((line = reader.readLine()) != null) {
-                if (line.startsWith("title: ")) {
-                    title = line.substring("title: ".length());
-                } else if (line.startsWith("description: ")) {
-                    description = line.substring("description: ".length());
-                } else if (line.startsWith("completed: ")) {
-                    completed = Boolean.parseBoolean(line.substring("completed: ".length()));
-                } else if (line.startsWith("deadline: ")) {
-                    deadline = LocalDateTime.parse(line.substring("deadline: ".length()));
-                } else if ((line.startsWith("end"))) {
-                    if (title != null && description != null && deadline != null) {
-                        ToDo toDo = new ToDo(title, description, completed, deadline);
-                        todos.add(toDo);
-                        title = null;
-                        description = null;
-                        completed = false;
-                        deadline = null;
-                    }
-                }
-            }
+        Gson gson = gsonBuilder.setPrettyPrinting().create();
+        String json;
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
+                json = bufferedReader.lines().collect(Collectors.joining("\n"));
         }
 
-        return todos;
+        Map<String, List<ToDo>> categoryMap = gson.fromJson(json, type);
+        if (categoryMap == null) {
+            categoryMap = new HashMap<>();
+        }
+        return categoryMap;
     }
 }

@@ -1,11 +1,16 @@
 package net.htlgkr.wunderlist.todo;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.io.BufferedWriter;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 public class ToDoWriter {
     private OutputStream outputStream;
@@ -14,14 +19,15 @@ public class ToDoWriter {
         this.outputStream = outputStream;
     }
 
-    public void writeToDoList(List<ToDo> toDoList) throws IOException {
-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream))) {
-            for (ToDo toDo : toDoList) {
-                writer.write("title: " + toDo.getTitle() + "\n");
-                writer.write("description: " + toDo.getDescription() + "\n");
-                writer.write("completed: " + toDo.isCompleted() + "\n");
-                writer.write("deadline: " + toDo.getDeadline().toString() + "\n");
-                writer.write("end\n");
+    public void writeToDos(Map<String, List<ToDo>> toDoCategoryMap) throws IOException {
+        if (toDoCategoryMap != null) {
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gsonBuilder.registerTypeAdapter(LocalDateTime.class, new LocalDateTimeSerializer());
+
+            Gson gson = gsonBuilder.setPrettyPrinting().create();
+            String json = gson.toJson(toDoCategoryMap);
+            try (final OutputStreamWriter outputStreamWriter = new OutputStreamWriter(outputStream)){
+                outputStreamWriter.write(json);
             }
         }
     }

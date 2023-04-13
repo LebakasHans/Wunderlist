@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <solid
-        android:id="@+id/note_item_solid"
-        />
+        android:id="@+id/note_item_solid"/>
     <stroke
         android:width="3dp"
-        android:color="#666666"/>
+        android:color="@color/seed"/>
     <corners
         android:radius="10dp"/>
 </shape>

@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/settings_actionbar"
-        android:icon="@drawable/ic_menu_settings"
-        app:showAsAction="always"
-        android:title="Settings" />
+
     <item
         android:id="@+id/newToDo_actionbar"
-        android:icon="@android:drawable/ic_menu_add"
+        android:icon="@drawable/wunderlist_ic_add"
+        android:title="new ToDO"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/settings_actionbar"
+        android:icon="@drawable/wunderlist_ic_menu_settings"
         app:showAsAction="always"
-        android:title="new ToDO" />
+        android:title="Settings" />
+
 </menu>
