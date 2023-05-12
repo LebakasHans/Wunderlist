@@ -3,8 +3,8 @@ package net.htlgkr.wunderlist.todo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
+import net.htlgkr.wunderlist.LocalDateTimeSerializer;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;

@@ -28,4 +28,3 @@ public class ToDoContract extends ActivityResultContract<ToDo, ToDo> {
         }
     }
 }
-

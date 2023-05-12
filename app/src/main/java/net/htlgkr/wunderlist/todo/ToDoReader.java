@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import net.htlgkr.wunderlist.LocalDateTimeDeserializer;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;

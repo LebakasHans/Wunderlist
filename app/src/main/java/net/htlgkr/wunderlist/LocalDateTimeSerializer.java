@@ -1,4 +1,4 @@
-package net.htlgkr.wunderlist.todo;
+package net.htlgkr.wunderlist;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
