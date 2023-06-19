@@ -94,6 +94,7 @@ public class ToDoAdapter extends BaseAdapter{
             setPreference("overdueNoteBackground", R.color.red, listItem);
         }
 
+
         ((CheckBox) listItem .findViewById(R.id.toDoLayoutIsCompleteCheckBox)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
